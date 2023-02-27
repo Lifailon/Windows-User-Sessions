@@ -1,5 +1,5 @@
 # Windows-User-Sessions
-Шаблон для проверки кол-ва активных и неактивных терминальных сессий и списка пользователей на машинах с ОС Windows. Протестирвоано на Windows Server 2016-2019 и Windows 10.
+Шаблон для проверки кол-ва активных и неактивных терминальных сессий и списка пользователей (Login) на машинах с ОС Windows и Windows Server.
 
 ![Image alt](https://github.com/Lifailon/Windows-User-Sessions/blob/rsa/Screen/Windows.jpg)
 
