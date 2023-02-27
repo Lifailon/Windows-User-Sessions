@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<zabbix_export>
+    <version>6.0</version>
+    <date>2023-02-27T13:17:35Z</date>
+    <groups>
+        <group>
+            <uuid>0d5e665adb7b4ea3a5f9298c1d1fc936</uuid>
+            <name>Windows</name>
+        </group>
+        <group>
+            <uuid>846977d1dfed4968bc5f8bdb363285bc</uuid>
+            <name>Windows Server</name>
+        </group>
+    </groups>
+    <templates>
+        <template>
+            <uuid>4bf35cff4a2642d5a8e1e7f91352075e</uuid>
+            <template>Windows-User-Sessions</template>
+            <name>Windows-User-Sessions</name>
+            <description>Template for module Get-Query
+GitHub:
+https://github.com/Lifailon/Get-Query
+https://github.com/Lifailon/Windows-User-Sessions</description>
+            <groups>
+                <group>
+                    <name>Windows</name>
+                </group>
+                <group>
+                    <name>Windows Server</name>
+                </group>
+            </groups>
+            <items>
+                <item>
+                    <uuid>08f82896ffa14c77958d9c585174bb46</uuid>
+                    <name>User active count</name>
+                    <key>Get-Query-Param[ACTIVECOUNT]</key>
+                    <history>21d</history>
+                    <trends>0</trends>
+                    <tags>
+                        <tag>
+                            <tag>PowerShell</tag>
+                            <value>User Sessions</value>
+                        </tag>
+                    </tags>
+                    <triggers>
+                        <trigger>
+                            <uuid>fea83ae4e3334e52a5d390ad7c48410e</uuid>
+                            <expression>last(/Windows-User-Sessions/Get-Query-Param[ACTIVECOUNT])&gt;{$ACTIVEMAX}</expression>
+                            <name>Количество активных пользователей выше {$ACTIVEMAX}</name>
+                            <priority>WARNING</priority>
+                            <description>При привышении максимального порога активных пользователей, можно делать вывод, что нагрузка на rdsh в ферме превышает допустимый, и возможно стоит наращивать количество хостов, при условии, что все сервера доступны. Он так же может сигнализировать о том, что кол-во серверов для подключения стало меньше обычного.</description>
+                        </trigger>
+                        <trigger>
+                            <uuid>a89b194722da45a6a8a5cb6c3c3827a7</uuid>
+                            <expression>min(/Windows-User-Sessions/Get-Query-Param[ACTIVECOUNT],24h)={$ACTIVEMIN}</expression>
+                            <name>Отсутствуют активные пользователи в течении 24 часов</name>
+                            <priority>WARNING</priority>
+                            <description>Отсутствие активных пользователей в течении 24 часов может говорить о том, что сервер недоступен для подключения, такое периодически случается, при этом будет доступен icmp и порт.</description>
+                        </trigger>
+                    </triggers>
+                </item>
+                <item>
+                    <uuid>59f51ecfbad24bc7968794b5c08c7c33</uuid>
+                    <name>Active users</name>
+                    <key>Get-Query-Param[ACTIVEUSER]</key>
+                    <history>21d</history>
+                    <trends>0</trends>
+                    <value_type>TEXT</value_type>
+                    <tags>
+                        <tag>
+                            <tag>PowerShell</tag>
+                            <value>User Sessions</value>
+                        </tag>
+                    </tags>
+                </item>
+                <item>
+                    <uuid>861e169d220b4d62ae5ae07974ffe6b3</uuid>
+                    <name>User inactive count</name>
+                    <key>Get-Query-Param[INACTIVECOUNT]</key>
+                    <history>21d</history>
+                    <trends>0</trends>
+                    <tags>
+                        <tag>
+                            <tag>PowerShell</tag>
+                            <value>User Sessions</value>
+                        </tag>
+                    </tags>
+                </item>
+                <item>
+                    <uuid>4fbabc3dd3884d37999e61704704d227</uuid>
+                    <name>Inactive users</name>
+                    <key>Get-Query-Param[INACTIVEUSER]</key>
+                    <history>21d</history>
+                    <trends>0</trends>
+                    <value_type>TEXT</value_type>
+                    <tags>
+                        <tag>
+                            <tag>PowerShell</tag>
+                            <value>User Sessions</value>
+                        </tag>
+                    </tags>
+                </item>
+            </items>
+            <macros>
+                <macro>
+                    <macro>{$ACTIVEMAX}</macro>
+                    <value>16</value>
+                    <description>Максимальное кол-во активных пользователей</description>
+                </macro>
+                <macro>
+                    <macro>{$ACTIVEMIN}</macro>
+                    <value>0</value>
+                    <description>Максимальное кол-во неактивных пользователей</description>
+                </macro>
+            </macros>
+        </template>
+    </templates>
+    <graphs>
+        <graph>
+            <uuid>73545dc0cb364f22869b943f5099140e</uuid>
+            <name>Active and inactive users</name>
+            <height>400</height>
+            <yaxismax>0</yaxismax>
+            <show_work_period>NO</show_work_period>
+            <show_triggers>NO</show_triggers>
+            <type>EXPLODED</type>
+            <graph_items>
+                <graph_item>
+                    <color>199C0D</color>
+                    <calc_fnc>LAST</calc_fnc>
+                    <item>
+                        <host>Windows-User-Sessions</host>
+                        <key>Get-Query-Param[ACTIVECOUNT]</key>
+                    </item>
+                </graph_item>
+                <graph_item>
+                    <sortorder>1</sortorder>
+                    <color>F63100</color>
+                    <calc_fnc>LAST</calc_fnc>
+                    <item>
+                        <host>Windows-User-Sessions</host>
+                        <key>Get-Query-Param[INACTIVECOUNT]</key>
+                    </item>
+                </graph_item>
+            </graph_items>
+        </graph>
+    </graphs>
+</zabbix_export>

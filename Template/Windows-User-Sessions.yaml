@@ -1,0 +1,113 @@
+zabbix_export:
+  version: '6.0'
+  date: '2023-02-27T13:17:32Z'
+  groups:
+    -
+      uuid: 0d5e665adb7b4ea3a5f9298c1d1fc936
+      name: Windows
+    -
+      uuid: 846977d1dfed4968bc5f8bdb363285bc
+      name: 'Windows Server'
+  templates:
+    -
+      uuid: 4bf35cff4a2642d5a8e1e7f91352075e
+      template: Windows-User-Sessions
+      name: Windows-User-Sessions
+      description: |
+        Template for module Get-Query
+        GitHub:
+        https://github.com/Lifailon/Get-Query
+        https://github.com/Lifailon/Windows-User-Sessions
+      groups:
+        -
+          name: Windows
+        -
+          name: 'Windows Server'
+      items:
+        -
+          uuid: 08f82896ffa14c77958d9c585174bb46
+          name: 'User active count'
+          key: 'Get-Query-Param[ACTIVECOUNT]'
+          history: 21d
+          trends: '0'
+          tags:
+            -
+              tag: PowerShell
+              value: 'User Sessions'
+          triggers:
+            -
+              uuid: fea83ae4e3334e52a5d390ad7c48410e
+              expression: 'last(/Windows-User-Sessions/Get-Query-Param[ACTIVECOUNT])>{$ACTIVEMAX}'
+              name: 'Количество активных пользователей выше {$ACTIVEMAX}'
+              priority: WARNING
+              description: 'При привышении максимального порога активных пользователей, можно делать вывод, что нагрузка на rdsh в ферме превышает допустимый, и возможно стоит наращивать количество хостов, при условии, что все сервера доступны. Он так же может сигнализировать о том, что кол-во серверов для подключения стало меньше обычного.'
+            -
+              uuid: a89b194722da45a6a8a5cb6c3c3827a7
+              expression: 'min(/Windows-User-Sessions/Get-Query-Param[ACTIVECOUNT],24h)={$ACTIVEMIN}'
+              name: 'Отсутствуют активные пользователи в течении 24 часов'
+              priority: WARNING
+              description: 'Отсутствие активных пользователей в течении 24 часов может говорить о том, что сервер недоступен для подключения, такое периодически случается, при этом будет доступен icmp и порт.'
+        -
+          uuid: 59f51ecfbad24bc7968794b5c08c7c33
+          name: 'Active users'
+          key: 'Get-Query-Param[ACTIVEUSER]'
+          history: 21d
+          trends: '0'
+          value_type: TEXT
+          tags:
+            -
+              tag: PowerShell
+              value: 'User Sessions'
+        -
+          uuid: 861e169d220b4d62ae5ae07974ffe6b3
+          name: 'User inactive count'
+          key: 'Get-Query-Param[INACTIVECOUNT]'
+          history: 21d
+          trends: '0'
+          tags:
+            -
+              tag: PowerShell
+              value: 'User Sessions'
+        -
+          uuid: 4fbabc3dd3884d37999e61704704d227
+          name: 'Inactive users'
+          key: 'Get-Query-Param[INACTIVEUSER]'
+          history: 21d
+          trends: '0'
+          value_type: TEXT
+          tags:
+            -
+              tag: PowerShell
+              value: 'User Sessions'
+      macros:
+        -
+          macro: '{$ACTIVEMAX}'
+          value: '16'
+          description: 'Максимальное кол-во активных пользователей'
+        -
+          macro: '{$ACTIVEMIN}'
+          value: '0'
+          description: 'Максимальное кол-во неактивных пользователей'
+  graphs:
+    -
+      uuid: 73545dc0cb364f22869b943f5099140e
+      name: 'Active and inactive users'
+      height: '400'
+      yaxismax: '0'
+      show_work_period: 'NO'
+      show_triggers: 'NO'
+      type: EXPLODED
+      graph_items:
+        -
+          color: 199C0D
+          calc_fnc: LAST
+          item:
+            host: Windows-User-Sessions
+            key: 'Get-Query-Param[ACTIVECOUNT]'
+        -
+          sortorder: '1'
+          color: F63100
+          calc_fnc: LAST
+          item:
+            host: Windows-User-Sessions
+            key: 'Get-Query-Param[INACTIVECOUNT]'
