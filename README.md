@@ -7,6 +7,7 @@
 
 ### Настройка.
 1. Импортируйте шаблон **[Windows-User-Sessions](https://github.com/Lifailon/Windows-User-Sessions/tree/rsa/Template)** в Zabbix.
+
 2. На клиентской машине с Zabbix Agent:
 * Задать в zabbix_agentd.conf параметр Include, в котором будет содержаться путь к файлу конфигурации:
 `Include=.\zabbix_agent2.d\plugins.d\*.conf`
