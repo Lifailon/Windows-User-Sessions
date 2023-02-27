@@ -9,8 +9,8 @@
 1. Импортируйте шаблон **[Windows-User-Sessions](https://github.com/Lifailon/Windows-User-Sessions/tree/rsa/Template)** в Zabbix.
 
 2. На клиентской машине с Zabbix Agent:
-* Указать в **zabbix_agentd.conf** параметр `Include`, в котором будет содержаться путь к файлу конфигурации:
-`Include=.\zabbix_agent2.d\plugins.d\*.conf`
+* Указать в **zabbix_agentd.conf** параметр `Include`, в котором будет содержаться путь к файлу конфигурации: \
+* `Include=.\zabbix_agent2.d\plugins.d\*.conf`
 * Поместить файл конфигурации **[User-Sessions.conf](https://github.com/Lifailon/Windows-User-Sessions/blob/rsa/Scripts/User-Sessions.conf)** с пользовательскими параметрами (`UserParamete`) в каталог, путь к которому указан в **zabbix_agentd.conf**
 * Поместить каталог **User-Sessions** с содержимым **[Get-Query-Param.ps1 ](https://github.com/Lifailon/Windows-User-Sessions/blob/rsa/Scripts/User-Sessions/Get-Query-Param.ps1)** в каталог, путь к которому указан в **User-Sessions.conf**. Скрипт содержим модуль **[Get-Query](https://github.com/Lifailon/Get-Query)** и пользовательские параметры, которые он принимает от Zabbix сервер, через агента.
 * Разрешить выполнение незарегистрированных сценариев PowerShell: `Set-ExecutionPolicy Unrestricted -Force`
